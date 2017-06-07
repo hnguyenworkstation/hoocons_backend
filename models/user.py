@@ -13,7 +13,7 @@ class User(Document):
     last_online = DateTimeField(default=datetime.utcnow())
     display_name = StringField()
     gender = StringField(max_length=6, choices=GENDER, default='Male')
-    avatar = StringField(default=utils.get_default_avatar_url())
+    profile_url = StringField(default=utils.get_default_avatar_url())
     birthday = DateTimeField()
     tokens = ListField(StringField(min_length=1))
     friends = ListField(ReferenceField('User'), default=[])
@@ -29,7 +29,7 @@ class User(Document):
             "username": self.username,
             "gender": self.gender,
             "display_name": self.display_name,
-            "avatar": self.avatar,
+            "avatar": self.profile_url,
             "timezone": self.timezone,
             "location": self.location,
             "last_online": str(self.last_online)
@@ -41,7 +41,7 @@ class User(Document):
             "username": self.username,
             "display_name": self.display_name,
             "gender": self.gender,
-            "avatar": self.avatar,
+            "avatar": self.profile_url,
             "timezone": self.timezone,
             "location": self.location,
             "last_online": str(self.last_online),

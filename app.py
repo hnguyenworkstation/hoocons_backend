@@ -2,6 +2,7 @@ from flask import Flask
 from flask_restful import Api
 
 from services.authentication import *
+from services.user_services import *
 
 import database.mlab as mlab
 
@@ -11,7 +12,10 @@ jwt = jwt_init(app)
 
 mlab.connect()
 
-api.add_resource(Register, "/register")
-
+########################################
+# USER SERVICE APIS
+########################################
+api.add_resource(Register, "/api/register")
+api.add_resource(CheckUsernameAvailability, "/api/user/availability")
 if __name__ == '__main__':
     app.run()
