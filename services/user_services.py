@@ -95,6 +95,25 @@ class UpdatePassword(Resource):
         except Exception as e:
             return {"message": str(e)}, 401
 
+    # This method is used when user forgets password and want to reset it
+    def post(self):
+        # Getting current identified user
+        parser = reqparse.RequestParser()
+        user = current_identity.user()
+
+        try:
+            # Getting new password and update
+            parser.add_argument("password", type=str, location="json")
+            body = parser.parse_args()
+            password = body.password
+            if password is not None and len(password) > 0:
+                user.password = password
+                user.save()
+                return 200
+            return {"message": "invalid password"}, 204
+        except Exception as e:
+            return {"message": str(e)}, 401
+
 
 class GetCurrentUserInfo(Resource):
     @jwt_required()
