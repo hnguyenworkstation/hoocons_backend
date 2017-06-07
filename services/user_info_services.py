@@ -157,6 +157,31 @@ class UpdateNickname(Resource):
             return {"message": str(e)}, status.HTTP_400_BAD_REQUEST
 
 
+class UpdateBirthday(Resource):
+    @jwt_required()
+    def put(self):
+        # Getting current identified user
+        user = current_identity.user()
+        if user is None:
+            return {"message": "Unable to find user information"}, status.HTTP_401_UNAUTHORIZED
+
+        # Try to save user display name
+        try:
+            parser = reqparse.RequestParser()
+            parser.add_argument("birthday", type=str, location="json")
+            body = parser.parse_args()
+            birthday = body.birthday
+            if birthday is not None and len(birthday) > 0:
+                user.birthday = utils.date_from_iso8601(birthday)
+                user.save()
+                user.update(last_online=datetime.utcnow())
+                return status.HTTP_200_OK
+            else:
+                return {"message": "Invalid Birthday"}, status.HTTP_417_EXPECTATION_FAILED
+        except Exception as e:
+            return {"message": str(e)}, status.HTTP_400_BAD_REQUEST
+
+
 class UpdatePassword(Resource):
     @jwt_required()
     def put(self):
