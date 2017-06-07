@@ -35,13 +35,12 @@ class Register(Resource):
         try:
             username = body.username
             password = body.password
-            username = str(username).lower()
             if username is None or len(username) == 0 or password is None or len(password) == 0:
                 return {"message": "username and password are required"}, status.HTTP_401_UNAUTHORIZED
             if len(username) < 10 or len(password) < 8:
                 return {"message": "too short"}, status.HTTP_401_UNAUTHORIZED
             try:
-                user = User(username=username, password=password)
+                user = User(username=username, password=password, logged_device_list=[device_id])
                 user.save()
             except ValueError as e:
                 return {"message": "have special character or not is phone number"}, status.HTTP_401_UNAUTHORIZED
