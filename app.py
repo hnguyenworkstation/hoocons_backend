@@ -3,7 +3,7 @@ from flask_restful import Api
 from services.authentication import *
 
 import database.mlab as mlab
-from services.user_services import *
+from services.user_info_services import *
 
 app = Flask(__name__)
 api = Api(app)
