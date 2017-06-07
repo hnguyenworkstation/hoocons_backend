@@ -15,12 +15,10 @@ class User(Document):
     gender = StringField(max_length=6, choices=GENDER, default='Male')
     profile_url = StringField(default=utils.get_default_avatar_url())
     birthday = DateTimeField()
-    tokens = ListField(StringField(min_length=1))
     friends = ListField(ReferenceField('User'), default=[])
     friends_pending = ListField(ReferenceField('User'), default=[])
     friends_ignore = ListField(ReferenceField('User'), default=[])
     friends_request = ListField(ReferenceField('User'), default=[])
-    timezone = StringField(default='UTC')
     location = GeoPointField(default=[-179, -85])
 
     def get_simple(self):
@@ -29,8 +27,7 @@ class User(Document):
             "username": self.username,
             "gender": self.gender,
             "display_name": self.display_name,
-            "avatar": self.profile_url,
-            "timezone": self.timezone,
+            "profile_url": self.profile_url,
             "location": self.location,
             "last_online": str(self.last_online)
         }
@@ -41,8 +38,7 @@ class User(Document):
             "username": self.username,
             "display_name": self.display_name,
             "gender": self.gender,
-            "avatar": self.profile_url,
-            "timezone": self.timezone,
+            "profile_url": self.profile_url,
             "location": self.location,
             "last_online": str(self.last_online),
             "friends": [user.get_simple() for user in self.friends],
