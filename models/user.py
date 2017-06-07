@@ -9,9 +9,10 @@ GENDER = ('Male', 'Female', 'Other')
 class User(Document):
     username = StringField(unique=True, required=True, min_length=6)
     password = StringField(min_length=8, required=True)
+    display_name = StringField()
+    nickname = StringField()
     date_join = DateTimeField(default=datetime.utcnow())
     last_online = DateTimeField(default=datetime.utcnow())
-    display_name = StringField()
     gender = StringField(max_length=6, choices=GENDER, default='Male')
     profile_url = StringField(default=utils.get_default_avatar_url())
     birthday = DateTimeField()
@@ -37,6 +38,7 @@ class User(Document):
             "id": str(self.id),
             "username": self.username,
             "display_name": self.display_name,
+            "nickname":self.nickname,
             "gender": self.gender,
             "profile_url": self.profile_url,
             "location": self.location,

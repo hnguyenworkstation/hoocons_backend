@@ -15,6 +15,7 @@ class CheckUsernameAvailability(Resource):
             parser.add_argument("username", type=str, location="json")
             body = parser.parse_args()
             user = User.objects(username=body.username).first()
+            user.update(last_online=datetime.utcnow())
             if user is None:
                 return {"message": "available"}, status.HTTP_200_OK
             return {"message": "existed"}, status.HTTP_201_CREATED
@@ -36,6 +37,7 @@ class UpdateUserInfo(Resource):
             parser.add_argument("profile_url", type=str, location="json")
             parser.add_argument("gender", type=str, location="json")
             parser.add_argument("display_name", type=str, location="json")
+            parser.add_argument("nickname", type=str, location="json")
             parser.add_argument("birthday", type=str, location="json")
             parser.add_argument("longitude", type=float, location="json")
             parser.add_argument("latitude", type=float, location="json")
@@ -55,6 +57,11 @@ class UpdateUserInfo(Resource):
             display_name = body.display_name
             if display_name is not None and len(display_name) > 0:
                 user.display_name = display_name
+
+            # Getting nickname
+            nickname = body.nickname
+            if nickname is not None and len(nickname) > 0:
+                user.nickname = nickname
 
             # Getting user birthday
             birthday = body.birthday
@@ -92,9 +99,60 @@ class UpdateDisplayName(Resource):
             if display_name is not None and len(display_name) > 0:
                 user.display_name = display_name
                 user.save()
+                user.update(last_online=datetime.utcnow())
                 return status.HTTP_200_OK
             else:
                 return {"message": "Invalid display name"}, status.HTTP_417_EXPECTATION_FAILED
+        except Exception as e:
+            return {"message": str(e)}, status.HTTP_400_BAD_REQUEST
+
+
+class UpdateProfileUrl(Resource):
+    @jwt_required()
+    def put(self):
+        # Getting current identified user
+        user = current_identity.user()
+        if user is None:
+            return {"message": "Unable to find user information"}, status.HTTP_401_UNAUTHORIZED
+
+        # Try to save user display name
+        try:
+            parser = reqparse.RequestParser()
+            parser.add_argument("profile_url", type=str, location="json")
+            body = parser.parse_args()
+            profile_url = body.profile_url
+            if profile_url is not None and len(profile_url) > 0:
+                user.profile_url = profile_url
+                user.save()
+                user.update(last_online=datetime.utcnow())
+                return status.HTTP_200_OK
+            else:
+                return {"message": "Invalid Profile Url"}, status.HTTP_417_EXPECTATION_FAILED
+        except Exception as e:
+            return {"message": str(e)}, status.HTTP_400_BAD_REQUEST
+
+
+class UpdateNickname(Resource):
+    @jwt_required()
+    def put(self):
+        # Getting current identified user
+        user = current_identity.user()
+        if user is None:
+            return {"message": "Unable to find user information"}, status.HTTP_401_UNAUTHORIZED
+
+        # Try to save user display name
+        try:
+            parser = reqparse.RequestParser()
+            parser.add_argument("nickname", type=str, location="json")
+            body = parser.parse_args()
+            nickname = body.nickname
+            if nickname is not None and len(nickname) > 0:
+                user.nickname = nickname
+                user.save()
+                user.update(last_online=datetime.utcnow())
+                return status.HTTP_200_OK
+            else:
+                return {"message": "Invalid nickname"}, status.HTTP_417_EXPECTATION_FAILED
         except Exception as e:
             return {"message": str(e)}, status.HTTP_400_BAD_REQUEST
 
@@ -114,6 +172,7 @@ class UpdatePassword(Resource):
             if password is not None and len(password) > 0:
                 user.password = password
                 user.save()
+                user.update(last_online=datetime.utcnow())
                 return 200
             return {"message": "invalid password"}, 204
         except Exception as e:
@@ -133,6 +192,7 @@ class UpdatePassword(Resource):
             if password is not None and len(password) > 0:
                 user.password = password
                 user.save()
+                user.update(last_online=datetime.utcnow())
                 return 200
             return {"message": "invalid password"}, 204
         except Exception as e:
