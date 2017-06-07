@@ -22,7 +22,9 @@ api.add_resource(UpdateDisplayName, "/api/user/update/display_name")
 api.add_resource(UpdateNickname, "/api/user/update/nickname")
 api.add_resource(UpdateProfileUrl, "/api/user/update/profile_url")
 api.add_resource(UpdateBirthday, "/api/user/update/birthday")
+api.add_resource(UpdateGender, "/api/user/update/gender")
 api.add_resource(GetCurrentUserInfo, "/api/user/get/info")
+
 
 if __name__ == '__main__':
     app.run()

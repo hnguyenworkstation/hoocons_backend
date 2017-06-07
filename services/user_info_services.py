@@ -8,6 +8,9 @@ import static.status as status
 from models.user import User
 
 
+GENDER = ('Male', 'Female', 'Other')
+
+
 class CheckUsernameAvailability(Resource):
     def post(self):
         try:
@@ -128,6 +131,32 @@ class UpdateProfileUrl(Resource):
                 return status.HTTP_200_OK
             else:
                 return {"message": "Invalid Profile Url"}, status.HTTP_417_EXPECTATION_FAILED
+        except Exception as e:
+            return {"message": str(e)}, status.HTTP_400_BAD_REQUEST
+
+
+class UpdateGender(Resource):
+    @jwt_required()
+    def put(self):
+        # Getting current identified user
+        user = current_identity.user()
+        if user is None:
+            return {"message": "Unable to find user information"}, status.HTTP_401_UNAUTHORIZED
+
+        # Try to save user display name
+        try:
+            parser = reqparse.RequestParser()
+            parser.add_argument("gender", type=str, location="json")
+            body = parser.parse_args()
+            gender = body.gender
+            if gender is not None and len(gender) > 0 and gender in GENDER:
+                user.gender = gender
+                user.save()
+                user.update(last_online=datetime.utcnow())
+                return status.HTTP_200_OK
+            else:
+                return {"message": "Invalid gender! Gender must be one of 'Male', 'Female', 'Other'"},\
+                       status.HTTP_417_EXPECTATION_FAILED
         except Exception as e:
             return {"message": str(e)}, status.HTTP_400_BAD_REQUEST
 
