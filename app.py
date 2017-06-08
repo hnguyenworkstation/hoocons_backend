@@ -4,6 +4,7 @@ from flask_restful import Api
 from services.authentication import *
 from services.user_info_services import *
 from services.friend_request_services import *
+from services.block_user_services import *
 
 import database.mlab as mlab
 
@@ -35,6 +36,12 @@ api.add_resource(SendFriendRequest, "/api/friend/request/send")
 api.add_resource(AcceptFriendRequest, "/api/friend/request/accept")
 api.add_resource(DeclineFriendRequest, "/api/friend/request/decline")
 api.add_resource(UnfriendRequest, "/api/friend/request/remove")
+
+
+########################################
+# USER BLOCKING SERVICES APIs
+########################################
+api.add_resource(BlockUserRequest, "/api/user/block")
 
 if __name__ == '__main__':
     app.run()

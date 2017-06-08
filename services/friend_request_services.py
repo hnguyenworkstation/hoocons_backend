@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from flask_jwt import jwt_required, current_identity
 from flask_restful import reqparse, Resource
 
@@ -7,7 +5,7 @@ from static import status
 from models.user import User
 from models.relationship import *
 
-from static import utils, app_constant
+from static import app_constant
 
 parser = reqparse.RequestParser()
 parser.add_argument("username", type=str, location="json")
@@ -19,7 +17,7 @@ class SendFriendRequest(Resource):
         try:
             # Parsing JSON
             body = parser.parse_args()
-            to_username = body.to_username
+            to_username = body.username
 
             user = current_identity.user()
             to_user = User.objects(username=to_username).first()
@@ -44,7 +42,7 @@ class SendFriendRequest(Resource):
                 user.update(pull__friends_request_from=relationship)
                 to_user.update(pull__friends_request_to=relationship)
 
-                relationship.update(date_of_action=datetime.utcnow(), status=app_constant.IS_FRIEND)
+                relationship.update(time_of_action=datetime.utcnow(), status=app_constant.IS_FRIEND)
                 user.update(add_to_set__friends=relationship)
                 to_user.update(add_to_set__friends=relationship)
 
@@ -97,7 +95,7 @@ class AcceptFriendRequest(Resource):
                 user.update(pull__friends_request_from=relationship)
                 from_user.update(pull__friends_request_to=relationship)
 
-                relationship.update(date_of_action=datetime.utcnow(), status=app_constant.IS_FRIEND)
+                relationship.update(time_of_action=datetime.utcnow(), status=app_constant.IS_FRIEND)
                 user.update(add_to_set__friends=relationship)
                 from_user.update(add_to_set__friends=relationship)
                 return {"message": "success"}, status.HTTP_200_OK
@@ -133,6 +131,7 @@ class DeclineFriendRequest(Resource):
                 # If the friend request found
                 user.update(pull__friends_request_from=relationship)
                 from_user.update(pull__friends_request_to=relationship)
+                relationship.delete()
                 return {"message": "success"}, status.HTTP_200_OK
             else:
                 return {"message": "unable to find user request"}, status.HTTP_204_NO_CONTENT

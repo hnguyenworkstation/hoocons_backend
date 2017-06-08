@@ -40,7 +40,7 @@ class Register(Resource):
             if len(username) < 10 or len(password) < 8:
                 return {"message": "too short"}, status.HTTP_401_UNAUTHORIZED
             try:
-                user = User(username=username, password=password, logged_device_list=[device_id])
+                user = User(username=username, password=password)
                 user.save()
             except ValueError as e:
                 return {"message": "have special character or not is phone number"}, status.HTTP_401_UNAUTHORIZED
