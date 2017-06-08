@@ -25,7 +25,7 @@ class SendFriendRequest(Resource):
             to_user = User.objects(username=to_username).first()
 
             if user is None or to_user is None:
-                return {"message": "failed to find user"}, status.HTTP_401_UNAUTHORIZED
+                return {"message": "failed to find user"}, status.HTTP_203_NON_AUTHORITATIVE_INFORMATION
 
             ''' 
             **********
@@ -82,7 +82,7 @@ class AcceptFriendRequest(Resource):
             from_user = User.objects(username=from_username).first()
 
             if user is None or from_user is None:
-                return {"message": "failed to find user"}, status.HTTP_401_UNAUTHORIZED
+                return {"message": "failed to find user"}, status.HTTP_203_NON_AUTHORITATIVE_INFORMATION
 
             # Checking if this user requested friend yet
             if any(from_username in sublist for sublist in user.friends_request_from) is True:
@@ -119,7 +119,7 @@ class DeclineFriendRequest(Resource):
             from_user = User.objects(username=from_username).first()
 
             if user is None or from_user is None:
-                return {"message": "failed to find user"}, status.HTTP_401_UNAUTHORIZED
+                return {"message": "failed to find user"}, status.HTTP_203_NON_AUTHORITATIVE_INFORMATION
 
             # Checking if this user requested friend yet
             if any(from_username in sublist for sublist in user.friends_request_from) is True:
@@ -136,6 +136,42 @@ class DeclineFriendRequest(Resource):
                 return {"message": "success"}, status.HTTP_200_OK
             else:
                 return {"message": "unable to find user request"}, status.HTTP_204_NO_CONTENT
+        except Exception as e:
+            return {"message": str(e)}, status.HTTP_400_BAD_REQUEST
+
+
+class UnfriendRequest(Resource):
+    @jwt_required()
+    def delete(self):
+        try:
+            # Parsing JSON
+            body = parser.parse_args()
+            friend_username = body.username
+
+            user = current_identity.user()
+            friend = User.objects(username=friend_username).first()
+
+            if user is None or friend is None:
+                return {"message": "failed to find user"}, status.HTTP_203_NON_AUTHORITATIVE_INFORMATION
+
+            '''
+                Checking if the requesting user is in the friend list
+            '''
+            if any(friend_username in sublist for sublist in user.friends) is True:
+                # Getting the relationship object
+                relationship = Relationship.objects(between_users=[user.username, friend_username]).first()
+                if relationship is None:
+                    relationship = Relationship.objects(between_users=[friend_username, user.username]).first()
+                    if relationship is None:
+                        return {"message": "unable to find relationship"}, status.HTTP_204_NO_CONTENT
+
+                # If the friend request found
+                user.update(pull__friends=relationship)
+                friend.update(pull__friends=relationship)
+                relationship.delete()
+                return {"message": "success"}, status.HTTP_200_OK
+            else:
+                return {"message": "not active friend"}
         except Exception as e:
             return {"message": str(e)}, status.HTTP_400_BAD_REQUEST
 

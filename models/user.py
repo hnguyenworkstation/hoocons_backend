@@ -15,10 +15,10 @@ class User(Document):
     gender = StringField(max_length=6, choices=app_constant.GENDER, default='Male')
     profile_url = StringField(default=utils.get_default_avatar_url())
     birthday = DateTimeField()
-    friends = ListField(ReferenceField('Friend'), default=[])
-    friends_request_from = ListField(ReferenceField('Friend'), default=[])
-    friends_request_to = ListField(ReferenceField('Friend'), default=[])
-    friends_ignore = ListField(ReferenceField('Friend'), default=[])
+    friends = ListField(ReferenceField('Relationship'), default=[])
+    friends_request_from = ListField(ReferenceField('Relationship'), default=[])
+    friends_request_to = ListField(ReferenceField('Relationship'), default=[])
+    friends_blocked = ListField(ReferenceField('Relationship'), default=[])
     location = GeoPointField(default=[-179, -85])
 
     def get_simple(self):
