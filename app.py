@@ -5,6 +5,7 @@ from services.authentication import *
 from services.user_info_services import *
 from services.friend_request_services import *
 from services.block_user_services import *
+from services.ignore_user_services import *
 
 import database.mlab as mlab
 
@@ -44,6 +45,12 @@ api.add_resource(UnfriendRequest, "/api/friend/request/remove")
 ########################################
 api.add_resource(BlockUserRequest, "/api/user/block")
 api.add_resource(UnblockUserRequest, "/api/user/unblock")
+
+
+########################################
+# USER IGNORING SERVICES APIs
+########################################
+api.add_resource(IgnoreUserRequest, "/api/user/ignore")
 
 if __name__ == '__main__':
     app.run()
