@@ -1,9 +1,8 @@
 from datetime import *
 from mongoengine import *
 
-import static.utils as utils
-
-GENDER = ('Male', 'Female', 'Other')
+from static import utils, app_constant
+from models import relationship
 
 
 class User(Document):
@@ -13,13 +12,13 @@ class User(Document):
     nickname = StringField()
     date_join = DateTimeField(default=datetime.utcnow())
     last_online = DateTimeField(default=datetime.utcnow())
-    gender = StringField(max_length=6, choices=GENDER, default='Male')
+    gender = StringField(max_length=6, choices=app_constant.GENDER, default='Male')
     profile_url = StringField(default=utils.get_default_avatar_url())
     birthday = DateTimeField()
-    friends = ListField(ReferenceField('User'), default=[])
-    friends_pending = ListField(ReferenceField('User'), default=[])
-    friends_ignore = ListField(ReferenceField('User'), default=[])
-    friends_request = ListField(ReferenceField('User'), default=[])
+    friends = ListField(ReferenceField('Friend'), default=[])
+    friends_request_from = ListField(ReferenceField('Friend'), default=[])
+    friends_request_to = ListField(ReferenceField('Friend'), default=[])
+    friends_ignore = ListField(ReferenceField('Friend'), default=[])
     location = GeoPointField(default=[-179, -85])
 
     def get_simple(self):

@@ -1,9 +1,11 @@
 from flask import Flask
 from flask_restful import Api
+
 from services.authentication import *
+from services.user_info_services import *
+from services.friend_services import *
 
 import database.mlab as mlab
-from services.user_info_services import *
 
 app = Flask(__name__)
 api = Api(app)
@@ -25,6 +27,12 @@ api.add_resource(UpdateBirthday, "/api/user/update/birthday")
 api.add_resource(UpdateGender, "/api/user/update/gender")
 api.add_resource(GetCurrentUserInfo, "/api/user/get/info")
 
+
+########################################
+# FRIEND SERVICE APIs
+########################################
+api.add_resource(AcceptFriendRequest, "/api/friend/request/accept")
+api.add_resource(DeclineFriendRequest, "/api/friend/request/decline")
 
 if __name__ == '__main__':
     app.run()
