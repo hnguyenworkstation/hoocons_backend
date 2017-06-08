@@ -31,6 +31,7 @@ api.add_resource(GetCurrentUserInfo, "/api/user/get/info")
 ########################################
 # FRIEND SERVICE APIs
 ########################################
+api.add_resource(SendFriendRequest, "/api/friend/request/send")
 api.add_resource(AcceptFriendRequest, "/api/friend/request/accept")
 api.add_resource(DeclineFriendRequest, "/api/friend/request/decline")
 
