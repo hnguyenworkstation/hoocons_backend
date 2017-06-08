@@ -42,6 +42,7 @@ api.add_resource(UnfriendRequest, "/api/friend/request/remove")
 # USER BLOCKING SERVICES APIs
 ########################################
 api.add_resource(BlockUserRequest, "/api/user/block")
+api.add_resource(UnblockUserRequest, "/api/user/unblock")
 
 if __name__ == '__main__':
     app.run()

@@ -75,3 +75,33 @@ class BlockUserRequest(Resource):
             return {"error": str(e)}, status.HTTP_400_BAD_REQUEST
 
 
+class UnblockUserRequest(Resource):
+    @jwt_required()
+    def post(self):
+        try:
+            body = parser.parse_args()
+            username = body.username
+
+            # Getting two users
+            user = current_identity.user()
+            blocking_user = User.objects(username=username).first()
+            if user is None or blocking_user is None:
+                return {"message": "failed to find user"}, status.HTTP_203_NON_AUTHORITATIVE_INFORMATION
+
+            '''
+                Getting the relationship between two users and go from there
+                *** NOTES: need to sort the relationship twice because there might be the wrong other of between_users
+            '''
+            relationship = Relationship.objects(between_users=[user.username, username]).first()
+            if relationship is None:
+                relationship = Relationship.objects(between_users=[username, user.username]).first()
+
+            if relationship is None or relationship.status != app_constant.USER_BLOCKED:
+                return {"message": "you are not blocking this user"}, status.HTTP_204_NO_CONTENT
+
+            user.update(pull__blocking=relationship)
+            blocking_user.update(pull__blocked_by=relationship)
+            relationship.delete()
+            return {"message": "success"}, status.HTTP_200_OK
+        except Exception as e:
+            return {"message": str(e)}, status.HTTP_400_BAD_REQUEST

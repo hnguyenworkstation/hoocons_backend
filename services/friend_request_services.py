@@ -114,9 +114,9 @@ class DeclineFriendRequest(Resource):
             from_username = body.username
 
             user = current_identity.user()
-            from_user = User.objects(username=from_username).first()
+            blocked_user = User.objects(username=from_username).first()
 
-            if user is None or from_user is None:
+            if user is None or blocked_user is None:
                 return {"message": "failed to find user"}, status.HTTP_203_NON_AUTHORITATIVE_INFORMATION
 
             # Checking if this user requested friend yet
@@ -130,7 +130,7 @@ class DeclineFriendRequest(Resource):
 
                 # If the friend request found
                 user.update(pull__friends_request_from=relationship)
-                from_user.update(pull__friends_request_to=relationship)
+                blocked_user.update(pull__friends_request_to=relationship)
                 relationship.delete()
                 return {"message": "success"}, status.HTTP_200_OK
             else:
