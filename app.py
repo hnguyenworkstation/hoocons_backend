@@ -34,7 +34,7 @@ api.add_resource(GetCurrentUserInfo, "/api/user/get/info")
 api.add_resource(SendFriendRequest, "/api/friend/request/send")
 api.add_resource(AcceptFriendRequest, "/api/friend/request/accept")
 api.add_resource(DeclineFriendRequest, "/api/friend/request/decline")
-api.add_resource(UnfriendRequest, "/api/friend/request/unfriend")
+api.add_resource(UnfriendRequest, "/api/friend/request/remove")
 
 if __name__ == '__main__':
     app.run()
