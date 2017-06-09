@@ -2,7 +2,6 @@ from datetime import *
 from mongoengine import *
 
 from static import utils, app_constant
-from models import relationship
 
 
 class User(Document):
@@ -15,13 +14,23 @@ class User(Document):
     gender = StringField(max_length=6, choices=app_constant.GENDER, default='Male')
     profile_url = StringField(default=utils.get_default_avatar_url())
     birthday = DateTimeField()
+    location = GeoPointField(default=[-179, -85])
+
+    # Event-related fields
+    posted_events = ListField(ReferenceField('BaseEvent'), default=[])
+    liked_events = ListField(ReferenceField('BaseEvent'), default=[])
+    reported_events = ListField(ReferenceField('BaseEvent'), default=[])
+
+    # Comment related fields
+    comments = ListField(ReferenceField('BaseComment'), default=[])
+
+    # Friendship and relationship with other users
     friends = ListField(ReferenceField('Relationship'), default=[])
     friends_request_from = ListField(ReferenceField('Relationship'), default=[])
     friends_request_to = ListField(ReferenceField('Relationship'), default=[])
     blocking = ListField(ReferenceField('Relationship'), default=[])
     blocked_by = ListField(ReferenceField('Relationship'), default=[])
     ignoring = ListField(ReferenceField('User'), default=[])
-    location = GeoPointField(default=[-179, -85])
 
     def get_simple(self):
         return {
@@ -32,6 +41,14 @@ class User(Document):
             "profile_url": self.profile_url,
             "location": self.location,
             "last_online": str(self.last_online)
+        }
+
+    def get_simple_header(self):
+        return {
+            "id": str(self.id),
+            "username": self.username,
+            "display_name": self.display_name,
+            "profile_url": self.profile_url,
         }
 
     def get_json(self):
