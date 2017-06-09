@@ -7,6 +7,7 @@ from services.friend_request_services import *
 from services.block_user_services import *
 from services.ignore_user_services import *
 from services.friend_services import *
+from services.event_request_services import *
 
 import database.mlab as mlab
 
@@ -53,6 +54,12 @@ api.add_resource(UnblockUserRequest, "/api/user/unblock")
 # USER IGNORING SERVICES APIs
 ########################################
 api.add_resource(IgnoreUserRequest, "/api/user/ignore")
+
+
+########################################
+# EVENT SERVICES APIs
+########################################
+api.add_resource(CreateEventRequest, "/api/event/create")
 
 
 if __name__ == '__main__':

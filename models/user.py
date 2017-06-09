@@ -34,6 +34,14 @@ class User(Document):
             "last_online": str(self.last_online)
         }
 
+    def get_simple_header(self):
+        return {
+            "id": str(self.id),
+            "username": self.username,
+            "display_name": self.display_name,
+            "profile_url": self.profile_url,
+        }
+
     def get_json(self):
         return {
             "id": str(self.id),
