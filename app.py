@@ -1,16 +1,13 @@
 from flask import Flask
 from flask_restful import Api
 
-from services.authentication import *
-from services.user_info_services import *
-from services.friend_request_services import *
-from services.block_user_services import *
-from services.ignore_user_services import *
-from services.friend_services import *
-from services.event_request_services import *
-from services.event_info_services import *
-
-import database.mlab as mlab
+from services.common_service.authentication import *
+from services.event_service.event_info_services import *
+from services.friend_service.friend_request_services import *
+from services.friend_service.friend_services import *
+from services.user_service.block_user_services import *
+from services.user_service.ignore_user_services import *
+from services.user_service.user_info_services import *
 
 app = Flask(__name__)
 api = Api(app)
