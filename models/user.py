@@ -20,6 +20,7 @@ class User(Document):
     friends_request_to = ListField(ReferenceField('Relationship'), default=[])
     blocking = ListField(ReferenceField('Relationship'), default=[])
     blocked_by = ListField(ReferenceField('Relationship'), default=[])
+    ignoring = ListField(ReferenceField('User'), default=[])
     location = GeoPointField(default=[-179, -85])
 
     def get_simple(self):
