@@ -29,7 +29,7 @@ class CreateEventRequest(Resource):
                               images=body.images, contain_event=body.contain_event,
                               privacy=body.privacy, location=[body.longitude, body.latitude],
                               tags=body.tags).save()
-            return event.get_complete_json(), status.HTTP_200_OK
+            return event.get_initial_json(), status.HTTP_200_OK
         except Exception as e:
             return {"error": str(e)}, status.HTTP_400_BAD_REQUEST
 

@@ -1,9 +1,9 @@
 from datetime import *
 
 import mongoengine
-from static import app_constant
-
 from mongoengine import *
+
+from static import app_constant
 
 
 class BaseEvent(Document):
@@ -14,7 +14,7 @@ class BaseEvent(Document):
     contain_event = StringField(default=[])
     create_at = DateTimeField(default=datetime.utcnow())
     privacy = StringField(choices=app_constant.ACCESS, default='Friend')
-    comments = ListField(ReferenceField('Comment'), default=[], reverse_delete_rule=mongoengine.PULL)
+    comments = ListField(ReferenceField('BaseComment'), default=[], reverse_delete_rule=mongoengine.PULL)
 
     # Like - Comment - Share - Report
     reported_by = ListField(ReferenceField('User'), default=[])
@@ -38,19 +38,52 @@ class BaseEvent(Document):
                 "images": [image for image in self.event.images],
             }
 
+    def get_initial_json(self):
+        if self.contain_event is None or len(self.contain_event) < 12:
+            return {
+                "id": str(self.id),
+                "create_by": self.create_by.get_simple_header(),
+                "create_at": str(self.create_at),
+                "text_context": self.text_context,
+                "images": [image for image in self.images],
+                "contain_event": ""
+            }
+        else:
+            return {
+                "id": str(self.id),
+                "create_by": self.create_by.get_simple_header(),
+                "create_at": str(self.create_at),
+                "text_context": self.text_context,
+                "images": [image for image in self.images],
+                "contain_event": self.get_shared_event_json()
+            }
+
     def get_complete_json(self):
         like_count = len(self.liked_by)
         report_count = len(self.reported_by)
         comment_count = len(self.comments)
-        return {
-            "id": str(self.id),
-            "create_by": self.create_by.get_simple_header(),
-            "create_at": str(self.create_at),
-            "text_context": self.text_context,
-            "images": [image for image in self.images],
-            "contain_event": self.get_shared_event_json(),
-            "like_count": like_count,
-            "comment_count": comment_count,
-            "report_count": report_count
-        }
+        if self.contain_event is None or len(self.contain_event) < 12:
+            return {
+                "id": str(self.id),
+                "create_by": self.create_by.get_simple_header(),
+                "create_at": str(self.create_at),
+                "text_context": self.text_context,
+                "images": [image for image in self.images],
+                "contain_event": "",
+                "like_count": like_count,
+                "comment_count": comment_count,
+                "report_count": report_count
+            }
+        else:
+            return {
+                "id": str(self.id),
+                "create_by": self.create_by.get_simple_header(),
+                "create_at": str(self.create_at),
+                "text_context": self.text_context,
+                "images": [image for image in self.images],
+                "contain_event": self.get_shared_event_json(),
+                "like_count": like_count,
+                "comment_count": comment_count,
+                "report_count": report_count
+            }
 

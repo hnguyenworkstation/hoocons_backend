@@ -19,6 +19,9 @@ gevent
 gunicorn
 mongoengine
 
+elasticsearch-dsl
+Flask-PyMongo
+
 # ----------------------
 # Other
 # ----------------------
@@ -26,7 +29,8 @@ youtube-dl
 responses==0.3
 requests>=2.6.0
 jinja2
-Flask-PyMongo
+
+
 python-firebase
 pyfirebase
 bunch
