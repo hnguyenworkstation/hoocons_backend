@@ -2,9 +2,13 @@ from flask import Flask
 from flask_restful import Api
 
 from services.common_service.authentication import *
+
 from services.event_service.event_info_services import *
+from services.event_service.event_request_services import *
+
 from services.friend_service.friend_request_services import *
 from services.friend_service.friend_services import *
+
 from services.user_service.block_user_services import *
 from services.user_service.ignore_user_services import *
 from services.user_service.user_info_services import *
@@ -58,6 +62,8 @@ api.add_resource(IgnoreUserRequest, "/api/user/ignore")
 # EVENT SERVICES APIs
 ########################################
 api.add_resource(CreateEventRequest, "/api/event/create")
+
+api.add_resource(GetCreatedEvent, "/api/event/get")
 
 
 if __name__ == '__main__':
