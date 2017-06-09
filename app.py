@@ -8,6 +8,7 @@ from services.block_user_services import *
 from services.ignore_user_services import *
 from services.friend_services import *
 from services.event_request_services import *
+from services.event_info_services import *
 
 import database.mlab as mlab
 

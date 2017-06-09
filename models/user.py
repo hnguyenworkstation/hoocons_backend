@@ -15,13 +15,23 @@ class User(Document):
     gender = StringField(max_length=6, choices=app_constant.GENDER, default='Male')
     profile_url = StringField(default=utils.get_default_avatar_url())
     birthday = DateTimeField()
+    location = GeoPointField(default=[-179, -85])
+
+    # Event-related fields
+    posted_events = ListField(ReferenceField('BaseEvent'), default=[])
+    liked_events = ListField(ReferenceField('BaseEvent'), default=[])
+    reported_events = ListField(ReferenceField('BaseEvent'), default=[])
+
+    # Comment related fields
+    comments = ListField(ReferenceField('BaseComment'), default=[])
+
+    # Friendship and relationship with other users
     friends = ListField(ReferenceField('Relationship'), default=[])
     friends_request_from = ListField(ReferenceField('Relationship'), default=[])
     friends_request_to = ListField(ReferenceField('Relationship'), default=[])
     blocking = ListField(ReferenceField('Relationship'), default=[])
     blocked_by = ListField(ReferenceField('Relationship'), default=[])
     ignoring = ListField(ReferenceField('User'), default=[])
-    location = GeoPointField(default=[-179, -85])
 
     def get_simple(self):
         return {
