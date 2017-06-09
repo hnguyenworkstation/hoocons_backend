@@ -63,7 +63,7 @@ api.add_resource(IgnoreUserRequest, "/api/user/ignore")
 ########################################
 api.add_resource(CreateEventRequest, "/api/event/create")
 
-api.add_resource(GetCreatedEvent, "/api/event/get")
+api.add_resource(GetCreatedEvent, "/api/event/get/<_from>/<_to>")
 
 
 if __name__ == '__main__':

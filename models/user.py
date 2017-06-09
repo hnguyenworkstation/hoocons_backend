@@ -2,7 +2,6 @@ from datetime import *
 from mongoengine import *
 
 from static import utils, app_constant
-from models import relationship
 
 
 class User(Document):

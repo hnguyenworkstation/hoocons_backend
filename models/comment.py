@@ -6,7 +6,7 @@ from static import app_constant
 from mongoengine import *
 
 
-class BaseComment(Document):
+class BaseComment(EmbeddedDocument):
     # Created with base data
     create_by = ReferenceField('User', required=True)
     text_context = StringField(default="")
