@@ -6,6 +6,7 @@ from services.user_info_services import *
 from services.friend_request_services import *
 from services.block_user_services import *
 from services.ignore_user_services import *
+from services.friend_services import *
 
 import database.mlab as mlab
 
@@ -17,7 +18,7 @@ mlab.connect()
 
 
 ########################################
-# USER SERVICE APIs
+# USER INFO SERVICE APIs
 ########################################
 api.add_resource(Register, "/api/register")
 api.add_resource(CheckUsernameAvailability, "/api/user/availability")
@@ -39,6 +40,7 @@ api.add_resource(AcceptFriendRequest, "/api/friend/request/accept")
 api.add_resource(DeclineFriendRequest, "/api/friend/request/decline")
 api.add_resource(UnfriendRequest, "/api/friend/request/remove")
 
+api.add_resource(GetSubFriendList, "/api/friend/get/sublist")
 
 ########################################
 # USER BLOCKING SERVICES APIs
@@ -51,6 +53,7 @@ api.add_resource(UnblockUserRequest, "/api/user/unblock")
 # USER IGNORING SERVICES APIs
 ########################################
 api.add_resource(IgnoreUserRequest, "/api/user/ignore")
+
 
 if __name__ == '__main__':
     app.run()
