@@ -62,6 +62,7 @@ api.add_resource(IgnoreUserRequest, "/api/user/ignore")
 # EVENT SERVICES APIs
 ########################################
 api.add_resource(CreateEventRequest, "/api/event/create")
+api.add_resource(DeleteEventRequest, "/api/event/delete")
 
 api.add_resource(GetCreatedEvent, "/api/event/get/<_from>/<_to>")
 
