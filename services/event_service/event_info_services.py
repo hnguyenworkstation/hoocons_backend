@@ -59,7 +59,8 @@ class UpdateEventRequest(Resource):
                 return {"message": "no permission to delete"}, status.HTTP_203_NON_AUTHORITATIVE_INFORMATION
 
             event.update(text_context=body.text_context, images=body.images, contain_event=body.contain_event,
-                         privacy=body.privacy, location=[body.longitude, body.latitude], tags=body.tags)
+                         privacy=body.privacy, location=[body.longitude, body.latitude], tags=body.tags, is_edited=True,
+                         last_edit_at=datetime.utcnow())
             user.update(last_online=datetime.utcnow())
             return event.get_complete_json(), status.HTTP_200_OK
         except Exception as e:
@@ -83,7 +84,32 @@ class UpdateTextEventRequest(Resource):
             if event is None or event not in user.posted_events:
                 return {"message": "no permission to delete"}, status.HTTP_203_NON_AUTHORITATIVE_INFORMATION
 
-            event.update(text_context=body.text_context)
+            event.update(text_context=body.text_context, is_edited=True, last_edit_at=datetime.utcnow())
+            user.update(last_online=datetime.utcnow())
+            return event.get_complete_json(), status.HTTP_200_OK
+        except Exception as e:
+            return {"error": str(e)}, status.HTTP_400_BAD_REQUEST
+
+
+class UpdateLocationEventRequest(Resource):
+    @jwt_required()
+    def put(self):
+        try:
+            user = current_identity.user()
+            if user is None:
+                return {"message": "Unable to find user information"}, status.HTTP_401_UNAUTHORIZED
+
+            parser = reqparse.RequestParser()
+            parser.add_argument("event_id", type=str, location="json")
+            parser.add_argument("longitude", type=float, location="json")
+            parser.add_argument("latitude", type=float, location="json")
+            body = parser.parse_args()
+
+            event = BaseEvent.objects(id=body.event_id).first()
+            if event is None or event not in user.posted_events:
+                return {"message": "no permission to delete"}, status.HTTP_203_NON_AUTHORITATIVE_INFORMATION
+
+            event.update(location=[body.longitude, body.latitude])
             user.update(last_online=datetime.utcnow())
             return event.get_complete_json(), status.HTTP_200_OK
         except Exception as e:

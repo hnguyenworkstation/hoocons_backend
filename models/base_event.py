@@ -16,6 +16,8 @@ class BaseEvent(Document):
     create_at = DateTimeField(default=datetime.utcnow())
     privacy = StringField(choices=app_constant.ACCESS, default='Friend')
     comments = ListField(EmbeddedDocumentField(BaseComment), default=[], reverse_delete_rule=mongoengine.PULL)
+    is_edited = BooleanField(default=False)
+    last_edit_at = DateTimeField(default=datetime.utcnow())
 
     # Like - Comment - Share - Report
     reported_by = ListField(ReferenceField('User'), default=[])
