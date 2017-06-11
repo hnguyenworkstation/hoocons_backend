@@ -21,6 +21,7 @@ class GetCreatedEvent(Resource):
             except ValueError as err:
                 pass
 
+            user.update(last_online=datetime.utcnow())
             if _from > len(user.posted_events):
                 return [], status.HTTP_200_OK
             elif _to >= len(user.posted_events):
