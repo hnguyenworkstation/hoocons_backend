@@ -166,3 +166,29 @@ class DeleteEventRequest(Resource):
         except Exception as e:
             return {"error": str(e)}, status.HTTP_400_BAD_REQUEST
 
+
+class ReportEvent(Resource):
+    @jwt_required
+    def post(self):
+        try:
+            user = current_identity.user()
+            if user is None:
+                return {"message": "Unable to find user information"}, status.HTTP_401_UNAUTHORIZED
+
+            parser = reqparse.RequestParser()
+            parser.add_argument("event_id", type=str, location="json")
+            body = parser.parse_args()
+
+            event = BaseEvent.objects(id=body.event_id).first()
+            if event is None:
+                return {"message": "event does not exists"}, status.HTTP_501_NOT_IMPLEMENTED
+
+            if event in user.posted_events:
+                return {"message": "can not report your own event"}, status.HTTP_203_NON_AUTHORITATIVE_INFORMATION
+
+            # Enough permission and information -> remove event
+            user.update(add_to_set__reported_events=event, last_online=datetime.utcnow())
+            event.update(add_to_set__reported_by=user)
+            return {"message": "success"}, status.HTTP_200_OK
+        except Exception as e:
+            return {"error": str(e)}, status.HTTP_400_BAD_REQUEST

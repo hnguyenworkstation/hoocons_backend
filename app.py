@@ -67,6 +67,7 @@ api.add_resource(UpdateTextEventRequest, "/api/event/update/text")
 api.add_resource(UpdateLocationEventRequest, "/api/event/update/location")
 api.add_resource(UpdateTagsEvent, "/api/event/update/tags")
 api.add_resource(DeleteEventRequest, "/api/event/delete")
+api.add_resource(ReportEvent, "/api/event/report")
 
 api.add_resource(GetCreatedEvent, "/api/event/get/<_from>/<_to>")
 
