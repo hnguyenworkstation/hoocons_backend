@@ -116,6 +116,30 @@ class UpdateLocationEventRequest(Resource):
             return {"error": str(e)}, status.HTTP_400_BAD_REQUEST
 
 
+class UpdateTagsEvent(Resource):
+    @jwt_required()
+    def put(self):
+        try:
+            user = current_identity.user()
+            if user is None:
+                return {"message": "Unable to find user information"}, status.HTTP_401_UNAUTHORIZED
+
+            parser = reqparse.RequestParser()
+            parser.add_argument("event_id", type=str, location="json")
+            parser.add_argument("tags", type=list, location="json")
+            body = parser.parse_args()
+
+            event = BaseEvent.objects(id=body.event_id).first()
+            if event is None or event not in user.posted_events:
+                return {"message": "no permission to delete"}, status.HTTP_203_NON_AUTHORITATIVE_INFORMATION
+
+            event.update(tags=body.tags, )
+            user.update(last_online=datetime.utcnow())
+            return event.get_complete_json(), status.HTTP_200_OK
+        except Exception as e:
+            return {"error": str(e)}, status.HTTP_400_BAD_REQUEST
+
+
 class DeleteEventRequest(Resource):
     @jwt_required()
     def delete(self):
