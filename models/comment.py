@@ -13,6 +13,7 @@ class BaseComment(EmbeddedDocument):
     image = StringField(default="")
     create_at = DateTimeField(default=datetime.utcnow())
     reply_to = StringField(default="")
+    is_edited = BooleanField(default=False)
 
     def get_reply_comment(self):
         comment = BaseComment.objects(id=self.reply_to).first()

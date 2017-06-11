@@ -2,6 +2,7 @@ from datetime import *
 from mongoengine import *
 
 from static import utils, app_constant
+from models.relationship import Relationship
 
 
 class User(Document):
@@ -49,6 +50,22 @@ class User(Document):
             "username": self.username,
             "display_name": self.display_name,
             "profile_url": self.profile_url,
+        }
+
+    def get_simple_relationship_drawer(self, username):
+        relationship = Relationship.objects(between_users=[self.username, username]).first()
+        if relationship is None:
+            relationship = Relationship.objects(between_users=[username, self.username]).first()
+
+        return {
+            "id": str(self.id),
+            "username": self.username,
+            "gender": self.gender,
+            "display_name": self.display_name,
+            "profile_url": self.profile_url,
+            "location": self.location,
+            "last_online": str(self.last_online),
+            "relationship": "Friend" if relationship in self.friends else "Normal"
         }
 
     def get_json(self):
