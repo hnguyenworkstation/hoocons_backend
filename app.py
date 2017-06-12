@@ -5,6 +5,7 @@ from services.common_service.authentication import *
 
 from services.event_service.event_info_services import *
 from services.event_service.event_request_services import *
+from services.event_service.comment_services import *
 
 from services.friend_service.friend_request_services import *
 from services.friend_service.friend_services import *
@@ -78,6 +79,10 @@ api.add_resource(GetCreatedEvent, "/api/event/get/<_from>/<_to>")
 api.add_resource(LikeEventRequest, "/api/event/like")
 api.add_resource(UnlikeEventRequest, "/api/event/unlike")
 
+########################################
+# COMMENT SERVICES APIs
+########################################
+api.add_resource(CreateCommentRequest, "/api/event/create/comment")
 
 if __name__ == '__main__':
     app.run()

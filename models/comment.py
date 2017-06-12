@@ -9,7 +9,7 @@ from mongoengine import *
 class BaseComment(EmbeddedDocument):
     # Created with base data
     create_by = ReferenceField('User', required=True)
-    text_context = StringField(default="")
+    text_content = StringField(default="")
     image = StringField(default="")
     create_at = DateTimeField(default=datetime.utcnow())
     reply_to = StringField(default="")
@@ -22,7 +22,7 @@ class BaseComment(EmbeddedDocument):
         else:
             return {
                 "created_by": comment.created_by.get_simple_header(),
-                "text_context": comment.text_context,
+                "text_content": comment.text_content,
                 "image": comment.image
             }
 
@@ -30,14 +30,14 @@ class BaseComment(EmbeddedDocument):
         if self.reply_to is None or len(self.reply_to) == 0:
             return {
                 "created_by": self.created_by.get_simple_header(),
-                "text_context": self.text_context,
+                "text_content": self.text_content,
                 "image": self.image,
                 "create_at": self.create_at
             }
         else:
             return {
                 "created_by": self.created_by.get_simple_header(),
-                "text_context": self.text_context,
+                "text_content": self.text_content,
                 "image": self.image,
                 "create_at": self.create_at,
                 "reply_to": self.get_reply_comment()
