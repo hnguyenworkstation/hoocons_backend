@@ -75,6 +75,8 @@ api.add_resource(DeleteEventRequest, "/api/event/delete")
 api.add_resource(ReportEvent, "/api/event/report")
 
 api.add_resource(GetCreatedEvent, "/api/event/get/<_from>/<_to>")
+api.add_resource(LikeEventRequest, "/api/event/like")
+api.add_resource(UnlikeEventRequest, "/api/event/unlike")
 
 
 if __name__ == '__main__':
