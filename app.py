@@ -81,9 +81,13 @@ api.add_resource(UnlikeEventRequest, "/api/event/unlike")
 
 ########################################
 # COMMENT SERVICES APIs
+#   @ future features:
+#       + reply to a comment
 ########################################
-api.add_resource(CreateCommentRequest, "/api/event/create/comment")
-api.add_resource(DeleteCommentRequest, "/api/event/delete/comment")
+api.add_resource(CreateCommentRequest, "/api/event/comment/create")
+api.add_resource(DeleteCommentRequest, "/api/event/comment/delete")
+api.add_resource(LikeCommentRequest, "/api/event/comment/like")
+api.add_resource(UnlikeCommentRequest, "/api/event/comment/unlike")
 
 if __name__ == '__main__':
     app.run()

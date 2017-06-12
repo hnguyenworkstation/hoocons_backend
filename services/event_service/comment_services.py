@@ -70,11 +70,65 @@ class DeleteCommentRequest(Resource):
 
             comment = BaseComment.objects(id=comment_id).first()
             if comment is None:
-                return {"message": "unable to fine event"}, status.HTTP_204_NO_CONTENT
+                return {"message": "unable to find event"}, status.HTTP_204_NO_CONTENT
 
             event.update(pull__comments=comment)
             user.update(last_online=datetime.utcnow())
             comment.delete()
+            return {"message": "request success"}, status.HTTP_200_OK
+        except ValueError as err:
+            return {"error": str(err)}, status.HTTP_400_BAD_REQUEST
+        except Exception as e:
+            return {"error": str(e)}, status.HTTP_400_BAD_REQUEST
+
+
+class LikeCommentRequest(Resource):
+    @jwt_required()
+    def post(self):
+        try:
+            user = current_identity.user()
+            if user is None:
+                return {"message": "Unable to find user information"}, status.HTTP_401_UNAUTHORIZED
+
+            parser = reqparse.RequestParser()
+            parser.add_argument("comment_id", type=str, location="json")
+            body = parser.parse_args()
+
+            comment_id = body.comment_id
+
+            comment = BaseComment.objects(id=comment_id).first()
+            if comment is None:
+                return {"message": "unable to fine event"}, status.HTTP_204_NO_CONTENT
+
+            comment.update(add_to_set__liked_by=user)
+            user.update(last_online=datetime.utcnow())
+            return {"message": "request success"}, status.HTTP_200_OK
+        except ValueError as err:
+            return {"error": str(err)}, status.HTTP_400_BAD_REQUEST
+        except Exception as e:
+            return {"error": str(e)}, status.HTTP_400_BAD_REQUEST
+
+
+class UnlikeCommentRequest(Resource):
+    @jwt_required()
+    def delete(self):
+        try:
+            user = current_identity.user()
+            if user is None:
+                return {"message": "Unable to find user information"}, status.HTTP_401_UNAUTHORIZED
+
+            parser = reqparse.RequestParser()
+            parser.add_argument("comment_id", type=str, location="json")
+            body = parser.parse_args()
+
+            comment_id = body.comment_id
+
+            comment = BaseComment.objects(id=comment_id).first()
+            if comment is None:
+                return {"message": "unable to fine event"}, status.HTTP_204_NO_CONTENT
+
+            comment.update(pull__liked_by=user)
+            user.update(last_online=datetime.utcnow())
             return {"message": "request success"}, status.HTTP_200_OK
         except ValueError as err:
             return {"error": str(err)}, status.HTTP_400_BAD_REQUEST
