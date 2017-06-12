@@ -20,3 +20,6 @@ class BaseAction(Document):
     with_content = StringField(default="")
 
     def get_complete_json(self):
+        return {
+            
+        }
