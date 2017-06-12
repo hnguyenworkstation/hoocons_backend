@@ -1,5 +1,6 @@
 from datetime import *
 from mongoengine import *
+import operator
 from flask_jwt import jwt_required, current_identity
 from flask_restful import reqparse, Resource
 from static import app_constant, status
@@ -130,6 +131,39 @@ class UnlikeCommentRequest(Resource):
             comment.update(pull__liked_by=user)
             user.update(last_online=datetime.utcnow())
             return {"message": "request success"}, status.HTTP_200_OK
+        except ValueError as err:
+            return {"error": str(err)}, status.HTTP_400_BAD_REQUEST
+        except Exception as e:
+            return {"error": str(e)}, status.HTTP_400_BAD_REQUEST
+
+
+class GetCommentRequest(Resource):
+    @jwt_required()
+    def get(self, _from, _to):
+        try:
+            user = current_identity.user()
+            if user is None:
+                return {"message": "Unable to find user information"}, status.HTTP_401_UNAUTHORIZED
+
+            parser = reqparse.RequestParser()
+            parser.add_argument("event_id", type=str, location="json")
+            body = parser.parse_args()
+
+            event_id = body.event_id
+
+            event = BaseEvent.objects(id=event_id).first()
+            if event is None:
+                return {"message": "event not found"}, status.HTTP_204_NO_CONTENT
+
+            comments = event.comments
+            comments.sort(operator.attrgetter('liked_by'))
+
+            if _from > len(comments):
+                return [], status.HTTP_200_OK
+            elif _to >= len(comments):
+                return [comment.get_complete_json() for comment in comments[_from:]], status.HTTP_200_OK
+            else:
+                return [comment.get_complete_json() for comment in comments[_from:_to]], status.HTTP_200_OK
         except ValueError as err:
             return {"error": str(err)}, status.HTTP_400_BAD_REQUEST
         except Exception as e:

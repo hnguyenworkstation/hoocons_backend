@@ -22,9 +22,13 @@ jwt = jwt_init(app)
 mlab.connect()
 
 
-########################################
-# USER INFO SERVICE APIs
-########################################
+'''########################################
+ IDENTIFIED USER SERVICES APIs:
+    @ finished features:
+        + register/authenticate user
+        + update user information
+    @ future features:
+########################################'''
 api.add_resource(Register, "/api/register")
 api.add_resource(CheckUsernameAvailability, "/api/user/availability")
 api.add_resource(UpdateUserInfo, "/api/user/update/info")
@@ -37,25 +41,35 @@ api.add_resource(UpdateGender, "/api/user/update/gender")
 api.add_resource(GetCurrentUserInfo, "/api/user/get/info")
 
 
-########################################
-# USER SERVICES APIs
-########################################
+'''########################################
+ USERS SERVICES APIs:
+    @ finished features:
+        + Share/Clear Location
+        + Get user around
+        + Block/Unblock other user
+        + Ignore/Un-ignore other user
+    @ future features:
+########################################'''
 api.add_resource(ShareLocationRequest, "/api/user/post/location")
 api.add_resource(ClearLocationRequest, "/api/user/remove/location")
 api.add_resource(GetUserAroundRequest, "/api/user/get/around")
 
-
-########################################
-# USER BLOCKING SERVICES APIs
-########################################
 api.add_resource(BlockUserRequest, "/api/user/block")
 api.add_resource(UnblockUserRequest, "/api/user/unblock")
 api.add_resource(IgnoreUserRequest, "/api/user/ignore")
 
 
-########################################
-# FRIEND SERVICE APIs
-########################################
+'''########################################
+ FRIENDS SERVICES APIs:
+    @ finished features:
+        + Request friend
+        + Accept/Deny friend request
+        + Un-Friend
+        + Get friend sublist
+    @ future features:
+        + get friend-request-received sublist
+        + get friend-request-sent sublist
+########################################'''
 api.add_resource(SendFriendRequest, "/api/friend/request/send")
 api.add_resource(AcceptFriendRequest, "/api/friend/request/accept")
 api.add_resource(DeclineFriendRequest, "/api/friend/request/decline")
@@ -64,9 +78,17 @@ api.add_resource(UnfriendRequest, "/api/friend/request/remove")
 api.add_resource(GetSubFriendList, "/api/friend/get/sublist")
 
 
-########################################
-# EVENT SERVICES APIs
-########################################
+'''########################################
+ EVENTS SERVICES APIs:
+    @ finished features:
+        + Create/Delete event
+        + Update event details
+        + Like/Unlike event
+        + Report event
+        + get created-event sublist
+    @ future features:
+        + get friend's events sublist
+########################################'''
 api.add_resource(CreateEventRequest, "/api/event/create")
 api.add_resource(UpdateEventRequest, "/api/event/update")
 api.add_resource(UpdateTextEventRequest, "/api/event/update/text")
@@ -79,15 +101,22 @@ api.add_resource(GetCreatedEvent, "/api/event/get/<_from>/<_to>")
 api.add_resource(LikeEventRequest, "/api/event/like")
 api.add_resource(UnlikeEventRequest, "/api/event/unlike")
 
-########################################
-# COMMENT SERVICES APIs
-#   @ future features:
-#       + reply to a comment
-########################################
+
+'''########################################
+ COMMENT SERVICES APIs:
+    @ finished features:
+        + add comment to an event
+        + delete comment to an event
+        + like/unlike comment
+        + get comment sublist by time
+    @ future features:
+        + reply to a comment
+########################################'''
 api.add_resource(CreateCommentRequest, "/api/event/comment/create")
 api.add_resource(DeleteCommentRequest, "/api/event/comment/delete")
 api.add_resource(LikeCommentRequest, "/api/event/comment/like")
 api.add_resource(UnlikeCommentRequest, "/api/event/comment/unlike")
+api.add_resource(GetCommentRequest, "/api/comment/get/<_from>/<_to>")
 
 if __name__ == '__main__':
     app.run()
