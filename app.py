@@ -83,6 +83,7 @@ api.add_resource(UnlikeEventRequest, "/api/event/unlike")
 # COMMENT SERVICES APIs
 ########################################
 api.add_resource(CreateCommentRequest, "/api/event/create/comment")
+api.add_resource(DeleteCommentRequest, "/api/event/delete/comment")
 
 if __name__ == '__main__':
     app.run()

@@ -6,12 +6,13 @@ from static import app_constant
 from mongoengine import *
 
 
-class BaseComment(EmbeddedDocument):
+class BaseComment(Document):
     # Created with base data
     create_by = ReferenceField('User', required=True)
     text_content = StringField(default="")
     image = StringField(default="")
     create_at = DateTimeField(default=datetime.utcnow())
+    liked_by = ListField(ReferenceField('User'), default=[])
     reply_to = StringField(default="")
     is_edited = BooleanField(default=False)
 
@@ -31,14 +32,16 @@ class BaseComment(EmbeddedDocument):
             return {
                 "created_by": self.created_by.get_simple_header(),
                 "text_content": self.text_content,
+                "likes_count": len(self.liked_by),
                 "image": self.image,
                 "create_at": self.create_at
             }
         else:
             return {
                 "created_by": self.created_by.get_simple_header(),
+                "create_at": self.create_at,
                 "text_content": self.text_content,
                 "image": self.image,
-                "create_at": self.create_at,
-                "reply_to": self.get_reply_comment()
+                "reply_to": self.get_reply_comment(),
+                "likes_count": len(self.liked_by)
             }
