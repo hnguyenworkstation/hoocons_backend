@@ -3,6 +3,7 @@ from mongoengine import *
 
 from static import utils, app_constant
 from models.relationship import Relationship
+from models.action import BaseAction
 
 
 class User(Document):
@@ -17,6 +18,9 @@ class User(Document):
     birthday = DateTimeField()
     location = GeoPointField(default=[-179, -85])
     is_sharing_location = BooleanField(default=False)
+
+    # Action fields
+    recent_actions = ListField(ReferenceField('BaseAction'), default=[])
 
     # Event-related fields
     posted_events = ListField(ReferenceField('BaseEvent'), default=[])
