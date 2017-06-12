@@ -66,30 +66,20 @@ class BaseEvent(Document):
             like_count = len(self.liked_by)
             report_count = len(self.reported_by)
             comment_count = len(self.comments)
-            if self.contain_event is None or len(self.contain_event) < 12:
-                return {
-                    "id": str(self.id),
-                    "create_by": self.create_by.get_simple_header(),
-                    "create_at": str(self.create_at),
-                    "text_context": self.text_context,
-                    "images": [image for image in self.images],
-                    "contain_event": "",
-                    "like_count": like_count,
-                    "comment_count": comment_count,
-                    "report_count": report_count
-                }
-            else:
-                return {
-                    "id": str(self.id),
-                    "create_by": self.create_by.get_simple_header(),
-                    "create_at": str(self.create_at),
-                    "text_context": self.text_context,
-                    "images": [image for image in self.images],
-                    "contain_event": self.get_shared_event_json(),
-                    "like_count": like_count,
-                    "comment_count": comment_count,
-                    "report_count": report_count
-                }
+
+            return {
+                "id": str(self.id),
+                "create_by": self.create_by.get_simple_header(),
+                "create_at": str(self.create_at),
+                "text_context": self.text_context,
+                "images": [image for image in self.images],
+                "contain_event": "" if self.contain_event is None or len(self.contain_event) < 12
+                else self.get_shared_event_json(),
+                "like_count": like_count,
+                "comment_count": comment_count,
+                "report_count": report_count
+            }
+
         except Exception as e:
             return str(e)
 

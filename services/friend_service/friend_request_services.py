@@ -42,7 +42,7 @@ class SendFriendRequest(Resource):
                 user.update(pull__friends_request_from=relationship)
                 to_user.update(pull__friends_request_to=relationship)
 
-                relationship.update(time_of_action=datetime.utcnow(), status=app_constant.IS_FRIEND)
+                relationship.update(time_of_action=datetime.utcnow(), status=app_constant.is_friend)
                 user.update(add_to_set__friends=relationship)
                 to_user.update(add_to_set__friends=relationship)
 
@@ -60,7 +60,7 @@ class SendFriendRequest(Resource):
             **********
             '''
             friend_request = Relationship(between_users=[user.username, to_username],
-                                          status=app_constant.FRIEND_REQUESTING).save()
+                                          status=app_constant.friend_requesting).save()
             user.update(add_to_set__friends_request_to=friend_request)
             to_user.update(add_to_set__friends_request_from=friend_request)
             return {"message": "success"}, status.HTTP_200_OK
@@ -95,7 +95,7 @@ class AcceptFriendRequest(Resource):
                 user.update(pull__friends_request_from=relationship)
                 from_user.update(pull__friends_request_to=relationship)
 
-                relationship.update(time_of_action=datetime.utcnow(), status=app_constant.IS_FRIEND)
+                relationship.update(time_of_action=datetime.utcnow(), status=app_constant.is_friend)
                 user.update(add_to_set__friends=relationship)
                 from_user.update(add_to_set__friends=relationship)
                 return {"message": "success"}, status.HTTP_200_OK

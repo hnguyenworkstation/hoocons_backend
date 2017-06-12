@@ -36,7 +36,7 @@ class BlockUserRequest(Resource):
             # if there is no relationship, simply add both users to the relationship
             if relationship is None:
                 blocked_request = Relationship(between_users=[user.username, username],
-                                               status=app_constant.USER_BLOCKED).save()
+                                               status=app_constant.user_blocked).save()
                 user.update(add_to_set__blocking=blocked_request)
                 blocking_user.update(add_to_set__blocked_by=blocked_request)
                 return {"message": "success"}, status.HTTP_200_OK
@@ -48,7 +48,7 @@ class BlockUserRequest(Resource):
             if relationship in user.friends_request_from:
                 user.update(pull__friends_request_from=relationship)
                 blocking_user.update(pull__friends_request_to=relationship)
-                relationship.update(status=app_constant.USER_BLOCKED,
+                relationship.update(status=app_constant.user_blocked,
                                     time_of_action=datetime.utcnow())
                 user.update(add_to_set__blocking=relationship)
                 blocking_user.update(add_to_set__blocked_by=relationship)
@@ -57,7 +57,7 @@ class BlockUserRequest(Resource):
             if relationship in user.friends_request_to:
                 user.update(pull__friends_request_to=relationship)
                 blocking_user.update(pull__friends_request_from=relationship)
-                relationship.update(status=app_constant.USER_BLOCKED,
+                relationship.update(status=app_constant.user_blocked,
                                     time_of_action=datetime.utcnow())
                 user.update(add_to_set__blocking=relationship)
                 blocking_user.update(add_to_set__blocked_by=relationship)
@@ -66,7 +66,7 @@ class BlockUserRequest(Resource):
             if relationship in user.friends:
                 user.update(pull__friends=relationship)
                 blocking_user.update(pull__friends=relationship)
-                relationship.update(status=app_constant.USER_BLOCKED,
+                relationship.update(status=app_constant.user_blocked,
                                     time_of_action=datetime.utcnow())
                 user.update(add_to_set__blocking=relationship)
                 blocking_user.update(add_to_set__blocked_by=relationship)
@@ -96,7 +96,7 @@ class UnblockUserRequest(Resource):
             if relationship is None:
                 relationship = Relationship.objects(between_users=[username, user.username]).first()
 
-            if relationship is None or relationship.status != app_constant.USER_BLOCKED:
+            if relationship is None or relationship.status != app_constant.user_blocked:
                 return {"message": "you are not blocking this user"}, status.HTTP_204_NO_CONTENT
 
             user.update(pull__blocking=relationship)
