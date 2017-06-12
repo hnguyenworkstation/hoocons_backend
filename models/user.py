@@ -16,6 +16,7 @@ class User(Document):
     profile_url = StringField(default=utils.get_default_avatar_url())
     birthday = DateTimeField()
     location = GeoPointField(default=[-179, -85])
+    is_sharing_location = BooleanField(default=False)
 
     # Event-related fields
     posted_events = ListField(ReferenceField('BaseEvent'), default=[])

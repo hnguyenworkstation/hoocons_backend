@@ -12,6 +12,7 @@ from services.friend_service.friend_services import *
 from services.user_service.block_user_services import *
 from services.user_service.ignore_user_services import *
 from services.user_service.user_info_services import *
+from services.user_service.user_request_services import *
 
 app = Flask(__name__)
 api = Api(app)
@@ -36,6 +37,22 @@ api.add_resource(GetCurrentUserInfo, "/api/user/get/info")
 
 
 ########################################
+# USER SERVICES APIs
+########################################
+api.add_resource(ShareLocationRequest, "/api/user/post/location")
+api.add_resource(ClearLocationRequest, "/api/user/remove/location")
+api.add_resource(GetUserAroundRequest, "/api/user/get/around")
+
+
+########################################
+# USER BLOCKING SERVICES APIs
+########################################
+api.add_resource(BlockUserRequest, "/api/user/block")
+api.add_resource(UnblockUserRequest, "/api/user/unblock")
+api.add_resource(IgnoreUserRequest, "/api/user/ignore")
+
+
+########################################
 # FRIEND SERVICE APIs
 ########################################
 api.add_resource(SendFriendRequest, "/api/friend/request/send")
@@ -44,18 +61,6 @@ api.add_resource(DeclineFriendRequest, "/api/friend/request/decline")
 api.add_resource(UnfriendRequest, "/api/friend/request/remove")
 
 api.add_resource(GetSubFriendList, "/api/friend/get/sublist")
-
-########################################
-# USER BLOCKING SERVICES APIs
-########################################
-api.add_resource(BlockUserRequest, "/api/user/block")
-api.add_resource(UnblockUserRequest, "/api/user/unblock")
-
-
-########################################
-# USER IGNORING SERVICES APIs
-########################################
-api.add_resource(IgnoreUserRequest, "/api/user/ignore")
 
 
 ########################################
