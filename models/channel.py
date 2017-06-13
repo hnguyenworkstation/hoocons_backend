@@ -4,16 +4,16 @@ from models.base_event import BaseEvent
 from models.user import *
 
 
-class Channel(Document):
+class BaseChannel(Document):
     # Ownership and Managers
     created_by = ReferenceField('User', required=True)
     owner = ReferenceField('User', default=created_by)
     moderators = ListField(ReferenceField('User'), default=[])
 
-    # Channel informations
+    # Channel information
     title = StringField(required=True)
     subtitle = StringField(required=True, unique=True)
-    wallpaper_url = StringField(default=utils.getUrlDefault())
+    wallpaper_url = StringField(default=utils.get_random_wallpaper())
     profile_url = StringField(required=True)
     description = StringField()
     created_at = DateTimeField(default=datetime.utcnow())

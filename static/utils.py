@@ -39,6 +39,10 @@ def get_default_avatar_url():
     return 'http://res.cloudinary.com/dumfykuvl/image/upload/v1493749974/images_lm0sjf.jpg'
 
 
+def get_random_wallpaper():
+    return 'http://res.cloudinary.com/dumfykuvl/image/upload/v1493749974/images_lm0sjf.jpg'
+
+
 def haveSpecialCharacter(string):
     return False if re.match("^[a-zA-Z0-9_]*$", string) else True
 

@@ -19,6 +19,14 @@ class User(Document):
     location = GeoPointField(default=[-179, -85])
     is_sharing_location = BooleanField(default=False)
 
+    # Friendship and relationship with other users
+    friends = ListField(ReferenceField('Relationship'), default=[])
+    friends_request_from = ListField(ReferenceField('Relationship'), default=[])
+    friends_request_to = ListField(ReferenceField('Relationship'), default=[])
+    blocking = ListField(ReferenceField('Relationship'), default=[])
+    blocked_by = ListField(ReferenceField('Relationship'), default=[])
+    ignoring = ListField(ReferenceField('User'), default=[])
+
     # Action fields
     recent_actions = ListField(ReferenceField('BaseAction'), default=[])
 
@@ -30,13 +38,12 @@ class User(Document):
     # Comment related fields
     comments = ListField(ReferenceField('BaseComment'), default=[])
 
-    # Friendship and relationship with other users
-    friends = ListField(ReferenceField('Relationship'), default=[])
-    friends_request_from = ListField(ReferenceField('Relationship'), default=[])
-    friends_request_to = ListField(ReferenceField('Relationship'), default=[])
-    blocking = ListField(ReferenceField('Relationship'), default=[])
-    blocked_by = ListField(ReferenceField('Relationship'), default=[])
-    ignoring = ListField(ReferenceField('User'), default=[])
+    # Channel and Threads related fields
+    owner_channels = ListField(ReferenceField('BaseChannel'), default=[])
+    admin_channels = ListField(ReferenceField('BaseChannel'), default=[])
+    thread_created = ListField(ReferenceField('BaseThread'), default=[])
+    thread_followed = ListField(ReferenceField('BaseThread'), default=[])
+    thread_replies = ListField(ReferenceField('BaseThreadReply'), default=[])
 
     def get_simple(self):
         return {
