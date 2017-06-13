@@ -118,5 +118,14 @@ api.add_resource(LikeCommentRequest, "/api/event/comment/like")
 api.add_resource(UnlikeCommentRequest, "/api/event/comment/unlike")
 api.add_resource(GetCommentRequest, "/api/comment/get/<_from>/<_to>")
 
+
+'''########################################
+ DANGER-ZONE SERVICES APIs:
+ 
+ ***** THESE API BELOW HERE NEED TO BE RE-IMPLEMENTED
+ BEFORE GOING TO BE USED IN CLIENTS
+########################################'''
+api.add_resource(DeleteUserAccount, "/api/user/delete")
+
 if __name__ == '__main__':
     app.run()

@@ -6,6 +6,10 @@ from flask_restful import reqparse, Resource
 import static.utils as utils
 import static.status as status
 from models.user import User
+from models.comment import BaseComment
+from models.base_event import BaseEvent
+from models.action import BaseAction
+from models.relationship import Relationship
 
 
 GENDER = ('Male', 'Female', 'Other')
@@ -262,5 +266,30 @@ class GetCurrentUserInfo(Resource):
                 user.update(last_online=datetime.utcnow())
                 return user.get_json(), status.HTTP_200_OK
             return {"message": "Unable to find user information"}, status.HTTP_401_UNAUTHORIZED
+        except Exception as e:
+            return {"message": str(e)}
+
+
+class DeleteUserAccount(Resource):
+    @jwt_required()
+    def delete(self):
+        try:
+            user = current_identity.user()
+            if user is None:
+                return {"message": "Unable to find user information"}, status.HTTP_401_UNAUTHORIZED
+
+            # Delete everything created by the current user
+            # Todo: Need to delete references of things created by this user
+            for action in BaseAction.objects(by_user=user):
+                action.delete()
+
+            for comment in BaseComment.objects(create_by=user):
+                comment.delete()
+
+            for event in BaseEvent.objects(create_by=user):
+                event.delete()
+
+            user.delete()
+            return {"message": "delete account complete"}, status.HTTP_200_OK
         except Exception as e:
             return {"message": str(e)}
