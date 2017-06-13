@@ -1,6 +1,7 @@
 import mongoengine
 
 from models.user import *
+from models.thread_reply import BaseThreadReply
 
 
 class BaseThread(Document):
@@ -11,4 +12,4 @@ class BaseThread(Document):
     text_content = StringField(required=True, min_length=10)
     images = ListField(StringField(), default=[])
     tags = ListField(StringField(), default=[])
-    
+    replies = ListField(ReferenceField(BaseThreadReply), default=[])
