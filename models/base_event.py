@@ -11,7 +11,7 @@ class BaseEvent(Document):
     # Created with base data
     create_by = ReferenceField('User', required=True)
     text_context = StringField(default="")
-    images = ListField(default=[])
+    images = ListField(StringField(), default=[])
     contain_event = StringField(default="")
     create_at = DateTimeField(default=datetime.utcnow())
     privacy = StringField(choices=app_constant.ACCESS, default='Friend')
