@@ -11,8 +11,8 @@ class BaseChannel(Document):
     moderators = ListField(ReferenceField('User'), default=[])
 
     # Channel information
-    title = StringField(required=True)
-    subtitle = StringField(required=True, unique=True)
+    name = StringField(required=True)
+    subname = StringField(required=True, unique=True)
     wallpaper_url = StringField(default=utils.get_random_wallpaper())
     profile_url = StringField(required=True)
     description = StringField()

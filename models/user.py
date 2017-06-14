@@ -39,6 +39,7 @@ class User(Document):
     comments = ListField(ReferenceField('BaseComment'), default=[])
 
     # Channel and Threads related fields
+    created_channels = ListField(ReferenceField('BaseChannel'), default=[])
     owner_channels = ListField(ReferenceField('BaseChannel'), default=[])
     admin_channels = ListField(ReferenceField('BaseChannel'), default=[])
     thread_created = ListField(ReferenceField('BaseThread'), default=[])

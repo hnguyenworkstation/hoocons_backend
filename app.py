@@ -15,6 +15,8 @@ from services.user_service.ignore_user_services import *
 from services.user_service.user_info_services import *
 from services.user_service.user_request_services import *
 
+from services.channel_service.channel_info_services import *
+
 app = Flask(__name__)
 api = Api(app)
 jwt = jwt_init(app)
@@ -117,6 +119,24 @@ api.add_resource(DeleteCommentRequest, "/api/event/comment/delete")
 api.add_resource(LikeCommentRequest, "/api/event/comment/like")
 api.add_resource(UnlikeCommentRequest, "/api/event/comment/unlike")
 api.add_resource(GetCommentRequest, "/api/comment/get/<_from>/<_to>")
+
+
+'''########################################
+ CHANNEL SERVICES APIs:
+    @ finished features:
+        + create new channel
+    @ future features:
+        + delete channel
+        + like/follow/report channel
+        + transfer ownership
+        + setting admin
+        + get followers
+        + get user who likes
+        + get threads belong to this channel
+        + delete thread from a channel
+        + create thread to a channel
+########################################'''
+api.add_resource(CreateChannelRequest, "/api/channel/create")
 
 
 '''########################################
