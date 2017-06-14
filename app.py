@@ -52,6 +52,8 @@ api.add_resource(GetCurrentUserInfo, "/api/user/get/info")
         + Ignore/Un-ignore other user
     @ future features:
 ########################################'''
+api.add_resource(ResetPasswordRequest, "/api/user/put/password")
+
 api.add_resource(ShareLocationRequest, "/api/user/post/location")
 api.add_resource(ClearLocationRequest, "/api/user/remove/location")
 api.add_resource(GetUserAroundRequest, "/api/user/get/around")

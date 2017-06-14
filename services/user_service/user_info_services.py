@@ -228,30 +228,31 @@ class UpdatePassword(Resource):
             body = parser.parse_args()
             password = body.password
             if password is not None and len(password) > 0:
-                user.password = password
-                user.save()
-                user.update(last_online=datetime.utcnow())
-                return 200
+                user.update(last_online=datetime.utcnow(), password=password)
+                return {"message": "success"}, status.HTTP_200_OK
             return {"message": "invalid password"}, 204
         except Exception as e:
             return {"message": str(e)}, 401
 
-    # This method is used when user forgets password and want to reset it
-    def post(self):
-        # Getting current identified user
-        parser = reqparse.RequestParser()
-        user = current_identity.user()
 
+class ResetPasswordRequest(Resource):
+    # This method is used when user forgets password and want to reset it
+    def put(self):
         try:
-            # Getting new password and update
-            parser.add_argument("password", type=str, location="json")
+            parser = reqparse.RequestParser()
+            parser.add_argument("username", type=str, location="json")
+            parser.add_argument("password", type=str, location="json")  # this is new password send to server
             body = parser.parse_args()
             password = body.password
+            username = body.username
+
+            user = User.objects(username=username).first()
+            if user is None:
+                return {"message": "not registered yet"}, status.HTTP_204_NO_CONTENT
+
             if password is not None and len(password) > 0:
-                user.password = password
-                user.save()
-                user.update(last_online=datetime.utcnow())
-                return 200
+                user.update(password=password)
+                return {"message": "success"}, status.HTTP_200_OK
             return {"message": "invalid password"}, 204
         except Exception as e:
             return {"message": str(e)}, 401
