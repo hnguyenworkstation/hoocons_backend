@@ -32,7 +32,8 @@ mlab.connect()
     @ future features:
 ########################################'''
 api.add_resource(Register, "/api/register")
-api.add_resource(CheckUsernameAvailability, "/api/user/availability")
+api.add_resource(CheckUsernameAvailability, "/api/user/username/check")
+api.add_resource(CheckNicknameAvailability, "/api/user/nickname/check")
 api.add_resource(UpdateUserInfo, "/api/user/update/info")
 api.add_resource(UpdatePassword, "/api/user/update/password")
 api.add_resource(UpdateDisplayName, "/api/user/update/display_name")

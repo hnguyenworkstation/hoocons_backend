@@ -29,6 +29,21 @@ class CheckUsernameAvailability(Resource):
             return {"message": str(e)}, status.HTTP_400_BAD_REQUEST
 
 
+class CheckNicknameAvailability(Resource):
+    @jwt_required()
+    def post(self):
+        try:
+            parser = reqparse.RequestParser()
+            parser.add_argument("nickname", type=str, location="json")
+            body = parser.parse_args()
+            user = User.objects(nickname=body.nickname).first()
+            if user is None:
+                return {"message": "available"}, status.HTTP_200_OK
+            return {"message": "existed"}, status.HTTP_201_CREATED
+        except Exception as e:
+            return {"message": str(e)}, status.HTTP_400_BAD_REQUEST
+
+
 class UpdateUserInfo(Resource):
     @jwt_required()
     def put(self):
