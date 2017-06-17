@@ -10,7 +10,7 @@ class User(Document):
     username = StringField(unique=True, required=True, min_length=6)
     password = StringField(min_length=8, required=True)
     display_name = StringField()
-    nickname = StringField()
+    nickname = StringField(default=username, unique=True, required=True, min_length=5, max_length=50)
     date_join = DateTimeField(default=datetime.utcnow())
     last_online = DateTimeField(default=datetime.utcnow())
     gender = StringField(max_length=6, choices=app_constant.GENDER, default='Male')
@@ -86,7 +86,7 @@ class User(Document):
             "id": str(self.id),
             "username": self.username,
             "display_name": self.display_name,
-            "nickname":self.nickname,
+            "nickname": self.nickname,
             "gender": self.gender,
             "profile_url": self.profile_url,
             "location": self.location,
@@ -106,5 +106,4 @@ class User(Document):
              _refs=None, save_condition=None, signal_kwargs=None, **kwargs):
         if self.display_name is None or len(self.display_name) == 0:
             self.display_name = self.username[:len(self.username) - 2] + "**"
-            print(self.display_name)
         return super(User, self).save()
