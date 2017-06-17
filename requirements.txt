@@ -30,7 +30,7 @@ responses==0.3
 requests>=2.6.0
 jinja2
 
-
+pycrypto
 python-firebase
 pyfirebase
 bunch

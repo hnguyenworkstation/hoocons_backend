@@ -1,14 +1,30 @@
 import hashlib
 import re
-from datetime import datetime
 import urllib.request
+import base64
+
+from Crypto.Cipher import XOR
+from datetime import datetime
+
+KEY_PASSW = "h@0C00N@$!#$691na"
 
 
 def date_from_iso8601(date_time_str):
-    if date_time_str != None and date_time_str != "":
+    if date_time_str is None and date_time_str != "":
         return datetime.strptime(date_time_str, "%Y-%m-%d")
     else:
         return None
+
+
+def encrypt(plaintext):
+    text = "@Ho@$" + plaintext + "@$!#!#$"
+    cipher = XOR.new(KEY_PASSW)
+    return str(base64.b64encode(cipher.encrypt(text)))
+
+
+def decrypt(cipher_text):
+    cipher = XOR.new(KEY_PASSW)
+    return str(cipher.decrypt(base64.b64decode(cipher_text)))
 
 
 def toISO8601(datetime):

@@ -40,7 +40,7 @@ class Register(Resource):
             if len(username) < 10 or len(password) < 8:
                 return {"message": "too short"}, status.HTTP_401_UNAUTHORIZED
             try:
-                user = User(username=username, password=password)
+                user = User(username=utils.encrypt(username), password=utils.encrypt(password))
                 user.save()
             except ValueError as e:
                 return {"message": "have special character or not is phone number"}, status.HTTP_401_UNAUTHORIZED
@@ -50,7 +50,9 @@ class Register(Resource):
 
 
 def authenticate(username, password):
-    username = username.lower()
+    username = str(utils.encrypt(username))
+    password = str(utils.encrypt(password))
+
     user = User.objects(username=username).first()
     if user is not None and safe_str_cmp(user.password.encode('utf-8'), password.encode('utf-8')):
         return LoginCredentials.create(user)
