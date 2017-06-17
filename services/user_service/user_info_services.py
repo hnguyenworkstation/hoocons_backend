@@ -22,7 +22,6 @@ class CheckUsernameAvailability(Resource):
             parser.add_argument("username", type=str, location="json")
             body = parser.parse_args()
             user = User.objects(username=body.username).first()
-            user.update(last_online=datetime.utcnow())
             if user is None:
                 return {"message": "available"}, status.HTTP_200_OK
             return {"message": "existed"}, status.HTTP_201_CREATED
