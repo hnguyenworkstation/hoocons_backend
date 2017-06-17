@@ -92,9 +92,9 @@ class User(Document):
             "location": self.location,
             "last_online": str(self.last_online),
             "friends": [user.get_simple() for user in self.friends],
-            "friends_pending": [user.get_simple() for user in self.friends_pending],
-            "friends_request": [user.get_simple() for user in self.friends_request],
-            "friends_ignore": [user.get_simple() for user in self.friends_ignore]
+            "friends_request_from": [user.get_simple() for user in self.friends_request_from],
+            "friends_request_to": [user.get_simple() for user in self.friends_request_to],
+            "ignoring_users": [user.get_simple() for user in self.ignoring]
         }
 
     def __eq__(self, other):

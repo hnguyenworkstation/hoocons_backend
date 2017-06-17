@@ -1,0 +1,21 @@
+branch-defaults:
+  master:
+    environment: hoocons-dev
+    group_suffix: null
+environment-defaults:
+  hoocons-dev:
+    branch: null
+    repository: null
+global:
+  application_name: hoocons_backend
+  branch: master
+  default_ec2_keyname: null
+  default_platform: Python 3.4 (Preconfigured - Docker)
+  default_region: ap-southeast-1
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: eb-cli
+  repository: hoocons_backend
+  sc: git
+  workspace_type: Application
